@@ -1,0 +1,31 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.*
+secrets.*
+
+# Local user data, databases, and exported backups
+data/
+user-data/
+personal-data/
+*.db
+*.sqlite
+*.sqlite3
+*.backup
+*.bak
+*backup*.json
+*-backup.json
+
+# Local editor and generated files
+.vscode/
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+Thumbs.db

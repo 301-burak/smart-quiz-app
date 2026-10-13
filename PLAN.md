@@ -1,0 +1,9 @@
+# Development plan
+
+1. **Set up the app shell** — **Complete.** Responsive library dashboard, folder navigation, accessible controls, and empty states.
+2. **Build local data storage** — **Complete (library foundation).** IndexedDB stores subjects, quizzes, and questions separately; folder and quiz records persist locally.
+3. **Build the Quiz Library** — **Complete.** Create, rename, and delete subject folders; create, rename, delete, and move quizzes between folders. Deleting a folder or quiz confirms first and removes its dependent records.
+4. **Build question authoring and import review** — **Complete (import milestone).** Import pasted text, PDF, and DOCX in the browser; recognize numbered A–D questions and answer keys; edit the preview; save quizzes and questions to separate IndexedDB stores. Missing/ambiguous answers are left blank and flagged, invalid formats are rejected, and scanned PDFs without selectable text receive a clear warning. Post-save question editing remains part of a later question-authoring milestone.
+5. **Study and track progress** — **Complete.** Open saved quiz cards, answer multiple-choice questions one at a time, track correct and incorrect responses, repeat missed questions until correct, and show the saved first-round score before optional mistake review. Leave and resume or restart each quiz independently; progress and completed score history are stored separately in IndexedDB.
+6. **Back up and restore data** — **Complete.** Export all five IndexedDB stores as a versioned JSON backup; validate imported files and their references; preview record counts; and restore additively only after confirmation. Existing IDs are never overwritten, and conflicts reject the full restore.
+7. **Polish and verify** — improve responsive and accessible behavior, handle import edge cases, and test the complete study flow. **Not started.**

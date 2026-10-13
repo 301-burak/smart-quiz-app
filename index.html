@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Organize your subjects and keep your study quizzes in one place."
+    >
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Quiz Library | Smart Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Subject folders">
+        <a class="brand" href="./" aria-label="Smart Quiz App home">
+          <span class="brand-mark" aria-hidden="true">Q</span>
+          <span class="brand-copy">
+            <strong>Smart Quiz</strong>
+            <span>YOUR STUDY SPACE</span>
+          </span>
+        </a>
+
+        <div class="sidebar-heading">
+          <h2>My subjects</h2>
+          <button
+            class="icon-button"
+            id="add-subject-sidebar"
+            type="button"
+            aria-label="Add subject folder"
+            title="Add subject folder"
+          >+</button>
+        </div>
+        <nav id="subject-list" class="subject-list" aria-label="Your subjects"></nav>
+        <div class="sidebar-note">
+          <span class="note-icon" aria-hidden="true">✦</span>
+          <p>Your questions, your pace. Everything stays on this device.</p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumb" aria-label="Current location">
+            <span>Library</span>
+            <span class="breadcrumb-divider" aria-hidden="true">/</span>
+            <span id="breadcrumb-subject">All subjects</span>
+          </div>
+          <div class="topbar-actions">
+            <span class="local-badge"><span aria-hidden="true"></span> Saved on this device</span>
+            <button class="button button-secondary" id="import-questions-button" type="button">
+              <span aria-hidden="true">⇧</span>
+              <span>Import questions</span>
+            </button>
+            <button class="button button-primary topbar-add" id="add-subject-top" type="button">
+              <span aria-hidden="true">+</span>
+              <span>New subject</span>
+            </button>
+          </div>
+        </header>
+
+        <section class="page-content" aria-labelledby="page-title">
+          <div id="library-dashboard">
+            <div class="welcome-row">
+              <div>
+                <p class="eyebrow">YOUR PERSONAL STUDY LIBRARY</p>
+                <h1 id="page-title">A little progress adds up.</h1>
+                <p class="page-subtitle">Keep your subjects organized and your next study session close.</p>
+              </div>
+              <div class="welcome-art" aria-hidden="true">
+                <span class="art-sparkle sparkle-one">✦</span>
+                <span class="art-sparkle sparkle-two">✧</span>
+                <span class="art-book">▤</span>
+              </div>
+            </div>
+
+            <div class="stats-grid" aria-label="Library overview">
+              <article class="stat-card">
+                <span class="stat-icon stat-icon-lilac" aria-hidden="true">▦</span>
+                <div><p>SUBJECTS</p><strong id="subject-count">0</strong></div>
+                <span class="stat-caption">folders</span>
+              </article>
+              <article class="stat-card">
+                <span class="stat-icon stat-icon-mint" aria-hidden="true">▤</span>
+                <div><p>QUIZZES</p><strong id="quiz-count">0</strong></div>
+                <span class="stat-caption">ready to build</span>
+              </article>
+              <article class="stat-card">
+                <span class="stat-icon stat-icon-peach" aria-hidden="true">◇</span>
+                <div><p>QUESTIONS</p><strong id="question-count">0</strong></div>
+                <span class="stat-caption">across your quizzes</span>
+              </article>
+            </div>
+
+            <div class="backup-actions" aria-label="Backup and restore">
+              <button class="button button-secondary" id="export-backup-button" type="button">
+                <span aria-hidden="true">↓</span>
+                <span>Export Backup</span>
+              </button>
+              <button class="button button-secondary" id="import-backup-button" type="button">
+                <span aria-hidden="true">↑</span>
+                <span>Import Backup</span>
+              </button>
+            </div>
+
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">YOUR COLLECTION</p>
+                <h2 id="collection-title">All subjects</h2>
+              </div>
+              <button class="button button-secondary" id="add-quiz-button" type="button" disabled>
+                <span aria-hidden="true">+</span>
+                <span>New quiz</span>
+              </button>
+            </div>
+
+            <div id="library-content" class="library-content"></div>
+          </div>
+          <section id="study-view" class="study-view" aria-live="polite" hidden></section>
+          <p class="app-message" id="app-message" role="status" aria-live="polite"></p>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="editor-dialog" id="editor-dialog" aria-labelledby="dialog-title">
+      <form id="editor-form">
+        <div class="dialog-topline">
+          <span class="dialog-mark" aria-hidden="true">✦</span>
+          <button
+            class="dialog-close"
+            type="button"
+            id="dialog-close"
+            aria-label="Close dialog"
+          >×</button>
+        </div>
+        <h2 id="dialog-title"></h2>
+        <p class="dialog-description" id="dialog-description"></p>
+        <label id="name-field-label" for="entity-name"></label>
+        <input
+          id="entity-name"
+          name="name"
+          type="text"
+          maxlength="80"
+          autocomplete="off"
+          required
+        >
+        <div class="form-field" id="subject-field" hidden>
+          <label for="subject-select">Move to subject</label>
+          <select id="subject-select" name="subjectId"></select>
+        </div>
+        <div class="dialog-actions">
+          <button class="button button-quiet" id="dialog-cancel" type="button">Cancel</button>
+          <button class="button button-primary" id="dialog-submit" type="submit">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="import-dialog" id="import-dialog" aria-labelledby="import-title">
+      <form id="import-form">
+        <div class="dialog-topline">
+          <span class="dialog-mark" aria-hidden="true">⇧</span>
+          <button
+            class="dialog-close"
+            type="button"
+            id="import-close"
+            aria-label="Close import dialog"
+          >×</button>
+        </div>
+        <h2 id="import-title">Import questions</h2>
+        <p class="dialog-description">Bring in your own questions, review every answer, and save them in a subject folder.</p>
+
+        <div class="import-metadata">
+          <div>
+            <label for="import-quiz-name">Quiz name</label>
+            <input id="import-quiz-name" name="quizName" type="text" maxlength="80" required>
+          </div>
+          <div>
+            <label for="import-subject">Subject folder</label>
+            <select id="import-subject" name="subjectId" required></select>
+          </div>
+        </div>
+
+        <fieldset class="source-options">
+          <legend>Question source</legend>
+          <label class="source-choice">
+            <input type="radio" name="sourceType" value="paste" checked>
+            <span>Paste text</span>
+          </label>
+          <label class="source-choice">
+            <input type="radio" name="sourceType" value="file">
+            <span>Upload PDF or DOCX</span>
+          </label>
+        </fieldset>
+
+        <div id="paste-source" class="source-panel">
+          <label for="question-text">Questions and answer key</label>
+          <textarea
+            id="question-text"
+            rows="8"
+            placeholder="1. What is 2 + 2?&#10;A) 3&#10;B) 4&#10;C) 5&#10;D) 6&#10;Answer: B"
+          ></textarea>
+          <p class="field-hint">Use numbered questions, A–D options, and an “Answer: B” line or an answer key.</p>
+        </div>
+
+        <div id="file-source" class="source-panel" hidden>
+          <label for="question-file">Choose a question file</label>
+          <input id="question-file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+          <p class="field-hint">PDF and DOCX files are read in this browser. Scanned PDFs without selectable text cannot be imported.</p>
+        </div>
+
+        <div class="import-actions">
+          <button class="button button-primary" id="preview-import" type="button">Preview questions</button>
+        </div>
+        <div id="import-feedback" class="import-feedback" role="status" aria-live="polite"></div>
+        <section id="import-preview" class="import-preview" aria-labelledby="preview-title" hidden>
+          <div class="preview-heading">
+            <div>
+              <p class="eyebrow">REVIEW BEFORE SAVING</p>
+              <h3 id="preview-title">Question preview</h3>
+            </div>
+            <span id="preview-count" class="preview-count"></span>
+          </div>
+          <p class="review-warning" id="review-warning" hidden></p>
+          <div id="preview-questions" class="preview-questions"></div>
+          <div class="dialog-actions">
+            <button class="button button-quiet" id="import-cancel" type="button">Cancel</button>
+            <button class="button button-primary" id="save-import" type="submit">Save quiz and questions</button>
+          </div>
+        </section>
+      </form>
+    </dialog>
+
+    <dialog class="import-dialog backup-dialog" id="backup-dialog" aria-labelledby="backup-title">
+      <div class="dialog-topline">
+        <span class="dialog-mark" aria-hidden="true">↻</span>
+        <button
+          class="dialog-close"
+          type="button"
+          id="backup-close"
+          aria-label="Close backup dialog"
+        >×</button>
+      </div>
+      <h2 id="backup-title">Import a backup</h2>
+      <p class="dialog-description">Choose a Smart Quiz JSON backup to validate and preview before restoring.</p>
+      <label for="backup-file-picker">Backup file</label>
+      <input id="backup-file-picker" type="file" accept="application/json,.json">
+      <p class="field-hint">Restore adds the backup records without replacing existing data. Files with conflicting record IDs are rejected.</p>
+      <p id="backup-feedback" class="import-feedback" role="status" aria-live="polite"></p>
+      <section id="backup-preview" class="backup-preview" aria-labelledby="backup-preview-title" hidden>
+        <p class="eyebrow">RESTORE PREVIEW</p>
+        <h3 id="backup-preview-title">Backup contents</h3>
+        <p id="backup-file-name" class="backup-file-name"></p>
+        <ul id="backup-counts" class="backup-counts"></ul>
+      </section>
+      <div class="dialog-actions">
+        <button class="button button-quiet" id="backup-cancel" type="button">Cancel</button>
+        <button class="button button-primary" id="restore-backup-button" type="button" disabled>Restore backup</button>
+      </div>
+    </dialog>
+  </body>
+</html>
